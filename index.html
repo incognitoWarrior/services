@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Navigation with Popup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        nav {
+            background-color: #333;
+            padding: 10px;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+        nav a:hover {
+            background-color: #575757;
+        }
+        section {
+            height: 100vh;
+            padding: 50px;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        section.active {
+            display: block;
+            opacity: 1;
+        }
+        #secretChat { background-color: lightblue; }
+        #videoCall { background-color: lightgreen; }
+        #voiceCall { background-color: lightcoral; }
+        #findGirls { background-color: lightpink; }
+
+        /* Callbox Styling */
+        .callbox {
+            margin-top: 20px;
+        }
+        .callbox input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .callbox button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .callbox button:hover {
+            background-color: #0056b3;
+        }
+        /* Links for Find Girls */
+        .linkbox a {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+        }
+        .linkbox a:hover {
+            background-color: #ddd;
+        }
+
+        /* Spinner Styling */
+        #spinner {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #333;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Popup Modal Styling */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Black background with opacity */
+            text-align: center;
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 400px;
+        }
+        .modal-content h1, .modal-content p {
+            margin: 0 0 15px;
+        }
+        .modal-content button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .modal-content button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Loading spinner -->
+<div id="spinner"></div>
+
+<!-- Popup Modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <h1>No one can trace you</h1>
+        <p>Developed by USA</p>
+        <button onclick="closeModal()">Okay</button>
+    </div>
+</div>
+
+<nav>
+    <a href="#" onclick="openSection('secretChat')">Secret Chat</a>
+    <a href="#" onclick="openSection('videoCall')">Video Call</a>
+    <a href="#" onclick="openSection('voiceCall')">Voice Call</a>
+    <a href="#" onclick="openSection('findGirls')">Find Other Girls</a>
+</nav>
+
+<section id="secretChat">
+    <h1>Secret Chat</h1>
+    <p>Click the button to open the secret chat room.</p>
+    <button onclick="openSecretChat()">Open Secret Chat</button>
+</section>
+
+<section id="videoCall">
+    <h1>Video Call</h1>
+    <div class="callbox">
+        <input type="text" id="videoCallLink" value="https://example.com/video-call" readonly>
+        <button onclick="copyLink('videoCallLink')">Copy Video Call Link</button>
+    </div>
+</section>
+
+<section id="voiceCall">
+    <h1>Voice Call</h1>
+    <div class="callbox">
+        <input type="text" id="voiceCallLink" value="https://example.com/voice-call" readonly>
+        <button onclick="copyLink('voiceCallLink')">Copy Voice Call Link</button>
+    </div>
+</section>
+
+<section id="findGirls">
+    <h1>Find Other Girls</h1>
+    <div class="linkbox">
+        <a href="https://www.holla.world/random-video-chat#app" target="_blank">Holla World</a>
+        <a href="https://callmechat.com/" target="_blank">Call Me Chat</a>
+        <a href="https://camloo.com/" target="_blank">Camloo</a>
+    </div>
+</section>
+
+<script>
+    // Function to show loading spinner
+    function showSpinner() {
+        document.getElementById('spinner').style.display = 'block';
+    }
+
+    // Function to hide loading spinner
+    function hideSpinner() {
+        document.getElementById('spinner').style.display = 'none';
+    }
+
+    // Function to open sections with a loading spinner
+    function openSection(sectionId) {
+        showSpinner();
+        
+        setTimeout(() => {
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            hideSpinner();
+        }, 1000);  // Simulates a 1-second loading delay
+    }
+
+    // Function to open the secret chat link
+    function openSecretChat() {
+        window.open('https://tlk.io/secretchat1', '_blank');
+    }
+
+    // Function to copy call link
+    function copyLink(inputId) {
+        const copyText = document.getElementById(inputId);
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // For mobile devices
+        document.execCommand('copy');
+        alert('Link copied: ' + copyText.value);
+    }
+
+    // Function to show the popup modal on page load
+    window.onload = function() {
+        document.getElementById('myModal').style.display = 'block';
+    }
+
+    // Function to close the popup modal
+    function closeModal() {
+        document.getElementById('myModal').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
