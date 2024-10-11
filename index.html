@@ -122,6 +122,13 @@
         .modal-content h1, .modal-content p {
             margin: 0 0 15px;
         }
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
         .modal-content button {
             padding: 10px 20px;
             background-color: #007BFF;
@@ -133,6 +140,10 @@
         .modal-content button:hover {
             background-color: #0056b3;
         }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -143,9 +154,10 @@
 <!-- Popup Modal -->
 <div id="myModal" class="modal">
     <div class="modal-content">
-        <h1>No one can trace you</h1>
-        <p>Developed by USA</p>
-        <button onclick="closeModal()">Okay</button>
+        <h1>Enter PIN Code</h1>
+        <input type="password" id="pinCode" placeholder="Enter 4-digit PIN">
+        <button onclick="validatePin()">Submit</button>
+        <p id="errorMessage" class="error"></p>
     </div>
 </div>
 
@@ -225,15 +237,22 @@
         alert('Link copied: ' + copyText.value);
     }
 
+    // Function to validate PIN code
+    function validatePin() {
+        const pin = document.getElementById('pinCode').value;
+        const errorMessage = document.getElementById('errorMessage');
+        if (pin === "2894") {
+            document.getElementById('myModal').style.display = 'none';
+        } else {
+            errorMessage.textContent = "Invalid PIN. Please try again.";
+        }
+    }
+
     // Function to show the popup modal on page load
     window.onload = function() {
         document.getElementById('myModal').style.display = 'block';
     }
 
-    // Function to close the popup modal
-    function closeModal() {
-        document.getElementById('myModal').style.display = 'none';
-    }
 </script>
 
 </body>
